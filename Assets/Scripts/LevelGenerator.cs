@@ -33,11 +33,15 @@ public class LevelGenerator : MonoBehaviour {
 	// we use these to dig through our maze and to spawn the pickup at the end
 	private int mazeX = 4, mazeY = 1;
 
+
 	// Use this for initialization
 	void Start () {
 
 		// initialize map 2D array
 		mapData = GenerateMazeData();
+
+		// 1 hole per 5 units of mazeSize aprox
+		int holeProbability = mazeSize * 5;
 
 		// create actual maze blocks from maze boolean data
 		for (int z = 0; z < mazeSize; z++) {
@@ -55,11 +59,16 @@ public class LevelGenerator : MonoBehaviour {
 
 					// flag as placed so we never consider placing again
 					characterPlaced = true;
+					CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
+				}
+				else
+				{
+					// create floor
+					if (!(Random.Range(1, holeProbability) == 1))
+						CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
 				}
 
-				// create floor and ceiling
-				CreateChildPrefab(floorPrefab, floorParent, x, 0, z);
-
+				// create ceiling
 				if (generateRoof) {
 					CreateChildPrefab(ceilingPrefab, wallsParent, x, 4, z);
 				}
